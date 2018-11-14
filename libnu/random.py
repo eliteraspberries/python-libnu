@@ -111,8 +111,6 @@ class Random(object):
         self.seed(seed)
 
     def seed(self, x):
-        if not type(x) in [int, long]:
-            raise ValueError
         xs = (ctypes.c_uint64 * 4)(
             x % (2 ** 64) // (2 ** 0),
             x % (2 ** 128) // (2 ** 64),
