@@ -19,6 +19,7 @@ _classifiers = [
 ]
 
 _install_requires = [
+    'numpy',
 ]
 
 with open('README.rst', 'r') as f:
