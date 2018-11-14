@@ -6,8 +6,9 @@ LibNu is a Python ctypes wrapper for the
 Requirements
 ------------
 
-LibNu requires Python and the
-`Nu <http://github.com/eliteraspberries/nu>`__ library.
+LibNu requires Python, the
+`Nu <http://github.com/eliteraspberries/nu>`__ library, and
+`NumPy <http://www.numpy.org/>`__.
 
 To run unit tests, `pytest <https://pytest.org/>`__ is required.
 

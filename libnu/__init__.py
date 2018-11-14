@@ -13,7 +13,9 @@ __version__ = '0.1'
 __email__ = 'mansourmoufid@gmail.com'
 __status__ = 'Development'
 
-__all__ = []
+__all__ = [
+    'random',
+]
 
 
 libdirs = ['.']
