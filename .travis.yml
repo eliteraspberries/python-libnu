@@ -2,9 +2,15 @@ language: python
 os:
   - linux
   - osx
-osx_image: xcode9.2
 python:
+  - "3.7"
+  - "3.6"
+  - "3.5"
+  - "3.4"
   - "2.7"
+matrix:
+  allow_failures:
+  - os: osx
 install:
   - export NUGITHUB=https://github.com/eliteraspberries/nu/releases/download
   - curl -L -o libnu.so $NUGITHUB/v0.1/libnu-0.1-$(uname -s)-$(uname -m).so
