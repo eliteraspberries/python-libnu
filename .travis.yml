@@ -11,6 +11,7 @@ python:
 matrix:
   allow_failures:
   - os: osx
+  - python: "3.7"
 install:
   - export NUGITHUB=https://github.com/eliteraspberries/nu/releases/download
   - curl -L -o libnu.so $NUGITHUB/v0.1/libnu-0.1-$(uname -s)-$(uname -m).so
