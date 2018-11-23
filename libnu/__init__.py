@@ -14,6 +14,7 @@ __email__ = 'mansourmoufid@gmail.com'
 __status__ = 'Development'
 
 __all__ = [
+    'array',
     'random',
 ]
 

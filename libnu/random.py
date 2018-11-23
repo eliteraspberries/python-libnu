@@ -2,6 +2,7 @@ import ctypes
 import numpy
 
 from . import libnu
+from . import array
 
 
 class NuRandomState(ctypes.Structure):
@@ -126,7 +127,7 @@ class Random(object):
             x = numpy.empty(size, dtype=numpy.float32)
             libnu.nu_random_array_float(
                 ctypes.byref(self.state),
-                ctypes.cast(x.ctypes.data, ctypes.POINTER(ctypes.c_float)),
+                array.addressof(x),
                 size,
             )
         return x
@@ -138,7 +139,7 @@ class Random(object):
             x = numpy.empty(size, dtype=numpy.float32)
             libnu.nu_random_array_gauss(
                 ctypes.byref(self.state),
-                ctypes.cast(x.ctypes.data, ctypes.POINTER(ctypes.c_float)),
+                array.addressof(x),
                 size,
             )
         return x * scale + loc
