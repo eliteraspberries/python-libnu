@@ -1,2 +1,4 @@
 .cache
+.hypothesis
+*.egg-info
 *.pyc
