@@ -1,3 +1,5 @@
 .
+hypothesis
+hypothesis[numpy]
 numpy
 pytest
