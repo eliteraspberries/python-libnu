@@ -3,15 +3,25 @@
 import functools
 import numpy
 
+import hypothesis
+import hypothesis.extra.numpy
+import hypothesis.strategies
+
 import libnu.array
 
+arrays = functools.partial(
+    hypothesis.extra.numpy.arrays,
+    dtype=numpy.float32,
+    unique=True,
+)
+floats = hypothesis.strategies.floats(-1.0, 1.0)
 numpy.linspace = functools.partial(numpy.linspace, dtype=numpy.float32)
 
 
-def test_maxmin():
-    x = numpy.sin(numpy.linspace(0.0, 2.0 * numpy.pi, 1000))
-    assert libnu.array.max(x) <= 1.0
-    assert libnu.array.min(x) >= -1.0
+@hypothesis.given(arrays(shape=10, elements=floats))
+def test_maxmin(x):
+    assert libnu.array.max(numpy.sin(x)) <= 1.0
+    assert libnu.array.min(numpy.sin(x)) >= -1.0
 
 
 if __name__ == '__main__':
