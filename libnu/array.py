@@ -1,7 +1,10 @@
 import ctypes
+import functools
 import numpy
 
 from . import libnu
+
+numpy.empty = functools.partial(numpy.empty, dtype=numpy.float32)
 
 
 def ctypeof(x):
@@ -35,6 +38,18 @@ nu_array_min.argtypes = [
     ctypes.c_size_t,
 ]
 
+'''
+void nu_array_linspace(float [], float, float, size_t);
+'''
+nu_array_linspace = libnu.nu_array_linspace
+nu_array_linspace.restype = None
+nu_array_linspace.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_float,
+    ctypes.c_float,
+    ctypes.c_size_t,
+]
+
 
 def max(x):
     return nu_array_max(addressof(x), x.size)
@@ -42,3 +57,9 @@ def max(x):
 
 def min(x):
     return nu_array_min(addressof(x), x.size)
+
+
+def linspace(a, b, n):
+    x = numpy.empty(n)
+    nu_array_linspace(addressof(x), a, b, n)
+    return x
