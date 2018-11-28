@@ -16,7 +16,7 @@ matrix:
   - python: "pypy"
 install:
   - export NUGITHUB=https://github.com/eliteraspberries/nu/releases/download
-  - curl -L -o libnu.so $NUGITHUB/v0.1/libnu-0.1-$(uname -s)-$(uname -m).so
+  - curl -L -o libnu.so $NUGITHUB/v0.2/libnu-0.2-$(uname -s)-$(uname -m).so
   - pip install -r requirements.txt
 script:
   - py.test
