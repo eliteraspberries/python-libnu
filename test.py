@@ -1,13 +1,20 @@
 #!/usr/bin/env python
 
-import math
 import numpy
+
+
+def abserror(a, b):
+    return numpy.abs(a - b)
+
+
+def relerror(a, b):
+    return abserror(a, b) / max(numpy.abs(a), numpy.abs(b))
 
 
 def eq(a, b, e):
     if type(a) == numpy.ndarray:
-        return all(a - b < e)
-    return math.fabs(a - b) < e
+        return all(abserror(a, b) < e)
+    return abserror(a, b) < e
 
 
 if __name__ == '__main__':
