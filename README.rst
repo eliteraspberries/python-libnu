@@ -10,7 +10,9 @@ LibNu requires Python, the
 `Nu <http://github.com/eliteraspberries/nu>`__ library, and
 `NumPy <http://www.numpy.org/>`__.
 
-To run unit tests, `pytest <https://pytest.org/>`__ is required.
+For testing, `pytest <https://pytest.org/>`__ and
+`Hypothesis <https://hypothesis.works/>`__ (and its NumPy module) are
+required.
 
 .. |image0| image:: https://travis-ci.org/eliteraspberries/python-libnu.svg
    :target: https://travis-ci.org/eliteraspberries/python-libnu
