@@ -39,6 +39,30 @@ nu_array_min.argtypes = [
 ]
 
 '''
+void nu_array_add(float [], float [], float [], size_t);
+'''
+nu_array_add = libnu.nu_array_add
+nu_array_add.restype = None
+nu_array_add.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_mul(float [], float [], float [], size_t);
+'''
+nu_array_mul = libnu.nu_array_mul
+nu_array_mul.restype = None
+nu_array_mul.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
 void nu_array_linspace(float [], float, float, size_t);
 '''
 nu_array_linspace = libnu.nu_array_linspace
@@ -57,6 +81,24 @@ def max(x):
 
 def min(x):
     return nu_array_min(addressof(x), x.size)
+
+
+def add(x, y, out=None):
+    assert x.size == y.size
+    n = x.size
+    if out is None:
+        out = numpy.empty(n)
+    nu_array_add(addressof(out), addressof(x), addressof(y), n)
+    return out
+
+
+def multiply(x, y, out=None):
+    assert x.size == y.size
+    n = x.size
+    if out is None:
+        out = numpy.empty(n)
+    nu_array_mul(addressof(out), addressof(x), addressof(y), n)
+    return out
 
 
 def linspace(a, b, n):
