@@ -43,6 +43,15 @@ nu_random_seed.argtypes = [
 ]
 
 '''
+void nu_random_jump(struct nu_random_state *);
+'''
+nu_random_jump = libnu.nu_random_jump
+nu_random_jump.restype = None
+nu_random_jump.argtypes = [
+    ctypes.POINTER(NuRandomState),
+]
+
+'''
 uint64_t nu_random(struct nu_random_state *);
 '''
 nu_random = libnu.nu_random
@@ -119,6 +128,10 @@ class Random(object):
             x % (2 ** 256) // (2 ** 192),
         )
         libnu.nu_random_seed256(ctypes.byref(self.state), xs)
+
+    def jump(self, n=1):
+        for i in range(n):
+            libnu.nu_random_jump(ctypes.byref(self.state))
 
     def random(self, size=None):
         if size is None:
