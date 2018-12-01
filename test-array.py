@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import functools
+import math
 import numpy
 
 import hypothesis
@@ -52,6 +53,26 @@ def test_multiply(x, y):
     assert eq(libnu.array.multiply(x, y), x * y, 1e-8)
 
 
+@hypothesis.given(arrays(shape=10, elements=floats(0.0, 2.0 * math.pi)))
+def test_cossin(x):
+    cosx = libnu.array.cos(x)
+    sinx = libnu.array.sin(x)
+    assert eq(cosx ** 2 + sinx ** 2, 1.0, 1e-4)
+    assert eq(cosx, libnu.array.cos(x + 2.0 * math.pi), 1e-4)
+    assert eq(sinx, libnu.array.sin(x + 2.0 * math.pi), 1e-4)
+    assert eq(cosx, libnu.array.sin(x + math.pi / 2.0), 1e-4)
+
+
+@hypothesis.given(arrays(shape=10, elements=floats(1e-6, math.e)))
+def test_explog(x):
+    logx = libnu.array.log(x)
+    expx = libnu.array.exp(x)
+    assert eq(libnu.array.exp(logx), x, 1e-4)
+    assert eq(libnu.array.log(expx), x, 1e-4)
+    assert eq(libnu.array.exp(x + 2.0), expx * math.exp(2.0), 1e-4)
+    assert eq(libnu.array.log(x * 2.0), logx + math.log(2.0), 1e-4)
+
+
 @hypothesis.given(floats(0.0, 10.0), floats(20.0, 100.0))
 def test_linspace(a, b):
     n = 10000
@@ -67,4 +88,6 @@ if __name__ == '__main__':
     test_maxmin()
     test_add()
     test_multiply()
+    test_cossin()
+    test_explog()
     test_linspace()

@@ -74,6 +74,50 @@ nu_array_linspace.argtypes = [
     ctypes.c_size_t,
 ]
 
+'''
+void nu_array_cos(float [], float [], size_t);
+'''
+nu_array_cos = libnu.nu_array_cos
+nu_array_cos.restype = None
+nu_array_cos.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_exp(float [], float [], size_t);
+'''
+nu_array_exp = libnu.nu_array_exp
+nu_array_exp.restype = None
+nu_array_exp.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_log(float [], float [], size_t);
+'''
+nu_array_log = libnu.nu_array_log
+nu_array_log.restype = None
+nu_array_log.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_sin(float [], float [], size_t);
+'''
+nu_array_sin = libnu.nu_array_sin
+nu_array_sin.restype = None
+nu_array_sin.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
 
 def max(x):
     return nu_array_max(addressof(x), x.size)
@@ -103,6 +147,39 @@ def add(x, y, out=None):
 
 @_arithmetic(nu_array_mul)
 def multiply(x, y, out=None):
+    pass
+
+
+def _transcendental(cfunction):
+    def wrapcfunction(function):
+        @functools.wraps(function)
+        def wrapfunction(x, out=None):
+            n = x.size
+            if out is None:
+                out = numpy.empty(n)
+            cfunction(addressof(out), addressof(x), n)
+            return out
+        return wrapfunction
+    return wrapcfunction
+
+
+@_transcendental(nu_array_cos)
+def cos(x, out=None):
+    pass
+
+
+@_transcendental(nu_array_exp)
+def exp(x, out=None):
+    pass
+
+
+@_transcendental(nu_array_log)
+def log(x, out=None):
+    pass
+
+
+@_transcendental(nu_array_sin)
+def sin(x, out=None):
     pass
 
 
