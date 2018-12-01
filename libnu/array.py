@@ -83,22 +83,27 @@ def min(x):
     return nu_array_min(addressof(x), x.size)
 
 
+def _arithmetic(cfunction):
+    def wrapcfunction(function):
+        @functools.wraps(function)
+        def wrapfunction(x, y, out=None):
+            n = x.size
+            if out is None:
+                out = numpy.empty(n)
+            cfunction(addressof(out), addressof(x), addressof(y), n)
+            return out
+        return wrapfunction
+    return wrapcfunction
+
+
+@_arithmetic(nu_array_add)
 def add(x, y, out=None):
-    assert x.size == y.size
-    n = x.size
-    if out is None:
-        out = numpy.empty(n)
-    nu_array_add(addressof(out), addressof(x), addressof(y), n)
-    return out
+    pass
 
 
+@_arithmetic(nu_array_mul)
 def multiply(x, y, out=None):
-    assert x.size == y.size
-    n = x.size
-    if out is None:
-        out = numpy.empty(n)
-    nu_array_mul(addressof(out), addressof(x), addressof(y), n)
-    return out
+    pass
 
 
 def linspace(a, b, n):
