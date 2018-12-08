@@ -19,6 +19,26 @@ def addressof(x):
 
 
 '''
+size_t nu_array_argmax(float [], size_t);
+'''
+nu_array_argmax = libnu.nu_array_argmax
+nu_array_argmax.restype = ctypes.c_size_t
+nu_array_argmax.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
+size_t nu_array_argmin(float [], size_t);
+'''
+nu_array_argmin = libnu.nu_array_argmin
+nu_array_argmin.restype = ctypes.c_size_t
+nu_array_argmin.argtypes = [
+    ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
 float nu_array_max(float [], size_t);
 '''
 nu_array_max = libnu.nu_array_max
@@ -117,6 +137,14 @@ nu_array_sin.argtypes = [
     ctypes.POINTER(ctypes.c_float),
     ctypes.c_size_t,
 ]
+
+
+def argmax(x):
+    return nu_array_argmax(addressof(x), x.size)
+
+
+def argmin(x):
+    return nu_array_argmin(addressof(x), x.size)
 
 
 def max(x):

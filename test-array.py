@@ -27,6 +27,8 @@ numpy.linspace = functools.partial(numpy.linspace, dtype=numpy.float32)
 def test_maxmin(x):
     assert libnu.array.max(x) >= libnu.array.min(x)
     assert libnu.array.min(x) <= libnu.array.max(x)
+    assert libnu.array.max(x) == x[libnu.array.argmax(x)]
+    assert libnu.array.min(x) == x[libnu.array.argmin(x)]
     assert libnu.array.max(numpy.sin(x)) <= 1.0
     assert libnu.array.min(numpy.sin(x)) >= -1.0
 
