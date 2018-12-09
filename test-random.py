@@ -5,13 +5,12 @@ import numpy
 
 import hypothesis
 import hypothesis.extra.numpy
-import hypothesis.strategies
+from hypothesis.strategies import floats
 
 import libnu.random
 
 from test import eq, relerror
 
-floats = hypothesis.strategies.floats
 random = libnu.random.Random()
 
 try:

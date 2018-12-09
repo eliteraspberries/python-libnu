@@ -6,7 +6,7 @@ import numpy
 
 import hypothesis
 import hypothesis.extra.numpy
-import hypothesis.strategies
+from hypothesis.strategies import floats
 
 import libnu.array
 
@@ -14,16 +14,15 @@ from test import eq
 
 arrays = functools.partial(
     hypothesis.extra.numpy.arrays,
-    dtype=numpy.float32,
+    shape=10,
     unique=True,
 )
-floats = hypothesis.strategies.floats
 numpy.ones = functools.partial(numpy.ones, dtype=numpy.float32)
 numpy.zeros = functools.partial(numpy.zeros, dtype=numpy.float32)
 numpy.linspace = functools.partial(numpy.linspace, dtype=numpy.float32)
 
 
-@hypothesis.given(arrays(shape=10, elements=floats(-1.0, 1.0)))
+@hypothesis.given(arrays(dtype=numpy.float32, elements=floats(-1.0, 1.0)))
 def test_maxmin(x):
     assert libnu.array.max(x) >= libnu.array.min(x)
     assert libnu.array.min(x) <= libnu.array.max(x)
@@ -34,8 +33,8 @@ def test_maxmin(x):
 
 
 @hypothesis.given(
-    arrays(shape=10, elements=floats(-1.0, 1.0)),
-    arrays(shape=10, elements=floats(-1.0, 1.0)),
+    arrays(dtype=numpy.float32, elements=floats(-1.0, 1.0)),
+    arrays(dtype=numpy.float32, elements=floats(-1.0, 1.0)),
 )
 def test_add(x, y):
     z = numpy.zeros(x.size)
@@ -45,8 +44,8 @@ def test_add(x, y):
 
 
 @hypothesis.given(
-    arrays(shape=10, elements=floats(-1.0, 1.0)),
-    arrays(shape=10, elements=floats(-1.0, 1.0)),
+    arrays(dtype=numpy.float32, elements=floats(-1.0, 1.0)),
+    arrays(dtype=numpy.float32, elements=floats(-1.0, 1.0)),
 )
 def test_multiply(x, y):
     z = numpy.ones(x.size)
@@ -55,7 +54,9 @@ def test_multiply(x, y):
     assert eq(libnu.array.multiply(x, y), x * y, 1e-8)
 
 
-@hypothesis.given(arrays(shape=10, elements=floats(0.0, 2.0 * math.pi)))
+@hypothesis.given(
+    arrays(dtype=numpy.float32, elements=floats(0.0, 2.0 * math.pi))
+)
 def test_cossin(x):
     cosx = libnu.array.cos(x)
     sinx = libnu.array.sin(x)
@@ -65,7 +66,9 @@ def test_cossin(x):
     assert eq(cosx, libnu.array.sin(x + math.pi / 2.0), 1e-4)
 
 
-@hypothesis.given(arrays(shape=10, elements=floats(1e-6, math.e)))
+@hypothesis.given(
+    arrays(dtype=numpy.float32, elements=floats(1e-8, math.e))
+)
 def test_explog(x):
     logx = libnu.array.log(x)
     expx = libnu.array.exp(x)
