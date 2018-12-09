@@ -19,4 +19,4 @@ install:
   - curl -L -o libnu.so $NUGITHUB/v0.3/libnu-0.3-$(uname -s)-$(uname -m).so
   - pip install -r requirements.txt
 script:
-  - py.test
+  - py.test --verbose
