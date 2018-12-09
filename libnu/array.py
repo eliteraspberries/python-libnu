@@ -4,8 +4,6 @@ import numpy
 
 from . import libnu
 
-numpy.empty = functools.partial(numpy.empty, dtype=numpy.float32)
-
 
 def ctypeof(x):
     assert isinstance(x, numpy.ndarray)
@@ -155,63 +153,63 @@ def min(x):
     return nu_array_min(addressof(x), x.size)
 
 
-def _arithmetic(cfunction):
+def _binary(cfunction, dtype):
     def wrapcfunction(function):
         @functools.wraps(function)
         def wrapfunction(x, y, out=None):
             n = x.size
             if out is None:
-                out = numpy.empty(n)
+                out = numpy.empty(n, dtype=dtype)
             cfunction(addressof(out), addressof(x), addressof(y), n)
             return out
         return wrapfunction
     return wrapcfunction
 
 
-@_arithmetic(nu_array_add)
+@_binary(nu_array_add, numpy.float32)
 def add(x, y, out=None):
     pass
 
 
-@_arithmetic(nu_array_mul)
+@_binary(nu_array_mul, numpy.float32)
 def multiply(x, y, out=None):
     pass
 
 
-def _transcendental(cfunction):
+def _unary(cfunction, dtype):
     def wrapcfunction(function):
         @functools.wraps(function)
         def wrapfunction(x, out=None):
             n = x.size
             if out is None:
-                out = numpy.empty(n)
+                out = numpy.empty(n, dtype=dtype)
             cfunction(addressof(out), addressof(x), n)
             return out
         return wrapfunction
     return wrapcfunction
 
 
-@_transcendental(nu_array_cos)
+@_unary(nu_array_cos, numpy.float32)
 def cos(x, out=None):
     pass
 
 
-@_transcendental(nu_array_exp)
+@_unary(nu_array_exp, numpy.float32)
 def exp(x, out=None):
     pass
 
 
-@_transcendental(nu_array_log)
+@_unary(nu_array_log, numpy.float32)
 def log(x, out=None):
     pass
 
 
-@_transcendental(nu_array_sin)
+@_unary(nu_array_sin, numpy.float32)
 def sin(x, out=None):
     pass
 
 
 def linspace(a, b, n):
-    x = numpy.empty(n)
+    x = empty(n, dtype=numpy.float32)
     nu_array_linspace(addressof(x), a, b, n)
     return x
