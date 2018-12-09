@@ -3,12 +3,16 @@ import functools
 import numpy
 
 from . import libnu
+from . import NuComplex
 
 
 def ctypeof(x):
     assert isinstance(x, numpy.ndarray)
     if x.dtype == numpy.float32:
         return ctypes.c_float
+    if x.dtype == numpy.complex64:
+        return NuComplex
+    return None
 
 
 def addressof(x):
@@ -77,6 +81,41 @@ nu_array_mul.argtypes = [
     ctypes.POINTER(ctypes.c_float),
     ctypes.POINTER(ctypes.c_float),
     ctypes.POINTER(ctypes.c_float),
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_cadd(nu_complex [], nu_complex [], nu_complex [], size_t);
+'''
+nu_array_cadd = libnu.nu_array_cadd
+nu_array_cadd.restype = None
+nu_array_cadd.argtypes = [
+    ctypes.POINTER(NuComplex),
+    ctypes.POINTER(NuComplex),
+    ctypes.POINTER(NuComplex),
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_cmul(nu_complex [], nu_complex [], nu_complex [], size_t);
+'''
+nu_array_cmul = libnu.nu_array_cmul
+nu_array_cmul.restype = None
+nu_array_cmul.argtypes = [
+    ctypes.POINTER(NuComplex),
+    ctypes.POINTER(NuComplex),
+    ctypes.POINTER(NuComplex),
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_conj(nu_complex [], nu_complex [], size_t);
+'''
+nu_array_conj = libnu.nu_array_conj
+nu_array_conj.restype = None
+nu_array_conj.argtypes = [
+    ctypes.POINTER(NuComplex),
+    ctypes.POINTER(NuComplex),
     ctypes.c_size_t,
 ]
 
@@ -166,16 +205,6 @@ def _binary(cfunction, dtype):
     return wrapcfunction
 
 
-@_binary(nu_array_add, numpy.float32)
-def add(x, y, out=None):
-    pass
-
-
-@_binary(nu_array_mul, numpy.float32)
-def multiply(x, y, out=None):
-    pass
-
-
 def _unary(cfunction, dtype):
     def wrapcfunction(function):
         @functools.wraps(function)
@@ -187,6 +216,31 @@ def _unary(cfunction, dtype):
             return out
         return wrapfunction
     return wrapcfunction
+
+
+@_binary(nu_array_add, numpy.float32)
+def add(x, y, out=None):
+    pass
+
+
+@_binary(nu_array_mul, numpy.float32)
+def multiply(x, y, out=None):
+    pass
+
+
+@_binary(nu_array_cadd, numpy.complex64)
+def cadd(x, y, out=None):
+    pass
+
+
+@_binary(nu_array_cmul, numpy.complex64)
+def cmul(x, y, out=None):
+    pass
+
+
+@_unary(nu_array_conj, numpy.complex64)
+def conj(x, out=None):
+    pass
 
 
 @_unary(nu_array_cos, numpy.float32)

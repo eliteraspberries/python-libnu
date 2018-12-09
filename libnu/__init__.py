@@ -39,3 +39,13 @@ class NuTupleFloat(ctypes.Structure):
         ('a', ctypes.c_float),
         ('b', ctypes.c_float),
     ]
+
+
+class NuComplex(ctypes.Structure):
+    '''
+    typedef struct {float r, i;} nu_complex;
+    '''
+    _fields_ = [
+        ('r', ctypes.c_float),
+        ('i', ctypes.c_float),
+    ]

@@ -55,6 +55,31 @@ def test_multiply(x, y):
 
 
 @hypothesis.given(
+    arrays(dtype=numpy.complex64),
+    arrays(dtype=numpy.complex64),
+)
+def test_cadd(x, y):
+    z = numpy.zeros(x.size, dtype=numpy.complex64)
+    assert all(libnu.array.cadd(x, z) == x)
+    assert all(libnu.array.cadd(x, y) == libnu.array.cadd(y, x))
+
+
+@hypothesis.given(
+    arrays(dtype=numpy.complex64),
+    arrays(dtype=numpy.complex64),
+)
+def test_cmul(x, y):
+    z = numpy.ones(x.size, dtype=numpy.complex64)
+    assert all(libnu.array.cmul(x, z) == x)
+    assert all(libnu.array.cmul(x, y) == libnu.array.cmul(y, x))
+
+
+@hypothesis.given(arrays(dtype=numpy.complex64))
+def test_conj(x):
+    assert all(libnu.array.conj(libnu.array.conj(x)) == x)
+
+
+@hypothesis.given(
     arrays(dtype=numpy.float32, elements=floats(0.0, 2.0 * math.pi))
 )
 def test_cossin(x):
@@ -93,6 +118,9 @@ if __name__ == '__main__':
     test_maxmin()
     test_add()
     test_multiply()
+    test_cadd()
+    test_cmul()
+    test_conj()
     test_cossin()
     test_explog()
     test_linspace()
