@@ -264,6 +264,6 @@ def sin(x, out=None):
 
 
 def linspace(a, b, n):
-    x = empty(n, dtype=numpy.float32)
+    x = numpy.empty(n, dtype=numpy.float32)
     nu_array_linspace(addressof(x), a, b, n)
     return x
