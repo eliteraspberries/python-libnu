@@ -6,7 +6,7 @@ import numpy
 
 import hypothesis
 import hypothesis.extra.numpy
-from hypothesis.strategies import floats
+from hypothesis.strategies import complex_numbers, floats
 
 import libnu.array
 
@@ -55,8 +55,8 @@ def test_multiply(x, y):
 
 
 @hypothesis.given(
-    arrays(dtype=numpy.complex64),
-    arrays(dtype=numpy.complex64),
+    arrays(dtype=numpy.complex64, elements=complex_numbers(0.0, 1.0)),
+    arrays(dtype=numpy.complex64, elements=complex_numbers(0.0, 1.0)),
 )
 def test_cadd(x, y):
     z = numpy.zeros(x.size, dtype=numpy.complex64)
@@ -65,8 +65,8 @@ def test_cadd(x, y):
 
 
 @hypothesis.given(
-    arrays(dtype=numpy.complex64),
-    arrays(dtype=numpy.complex64),
+    arrays(dtype=numpy.complex64, elements=complex_numbers(0.0, 1.0)),
+    arrays(dtype=numpy.complex64, elements=complex_numbers(0.0, 1.0)),
 )
 def test_cmul(x, y):
     z = numpy.ones(x.size, dtype=numpy.complex64)
@@ -74,7 +74,9 @@ def test_cmul(x, y):
     assert all(libnu.array.cmul(x, y) == libnu.array.cmul(y, x))
 
 
-@hypothesis.given(arrays(dtype=numpy.complex64))
+@hypothesis.given(
+    arrays(dtype=numpy.complex64, elements=complex_numbers(0.0, 1.0))
+)
 def test_conj(x):
     assert all(libnu.array.conj(libnu.array.conj(x)) == x)
 
