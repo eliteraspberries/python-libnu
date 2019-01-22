@@ -20,6 +20,32 @@ def addressof(x):
     return ctypes.cast(x.ctypes.data, ctypes.POINTER(ctypeof(x)))
 
 
+pybuffer_from_memory = ctypes.pythonapi.PyBuffer_FromMemory
+pybuffer_from_memory.restype = ctypes.py_object
+pybuffer_from_memory.argtypes = [
+    ctypes.c_void_p,
+    ctypes.c_ssize_t,
+]
+
+'''
+void *nu_array_alloc(size_t, size_t);
+'''
+nu_array_alloc = libnu.nu_array_alloc
+nu_array_alloc.restype = ctypes.c_void_p
+nu_array_alloc.argtypes = [
+    ctypes.c_size_t,
+    ctypes.c_size_t,
+]
+
+'''
+void nu_array_free(void *);
+'''
+nu_array_free = libnu.nu_array_free
+nu_array_free.restype = None
+nu_array_free.argtypes = [
+    ctypes.c_void_p,
+]
+
 '''
 size_t nu_array_argmax(float [], size_t);
 '''
@@ -174,6 +200,27 @@ nu_array_sin.argtypes = [
     ctypes.POINTER(ctypes.c_float),
     ctypes.c_size_t,
 ]
+
+
+class Array(numpy.ndarray):
+
+    def __init__(self, n, dtype):
+        pass
+
+    def __new__(cls, n, dtype):
+        stride = numpy.dtype(dtype).itemsize
+        ptr = nu_array_alloc(n, stride)
+        buffer = pybuffer_from_memory(ptr, n * stride)
+        array = super(Array, cls).__new__(cls, n, dtype=dtype, buffer=buffer)
+        array.ptr = ptr
+        return array
+
+    def __del__(self):
+        nu_array_free(self.ptr)
+
+
+def empty(n, dtype):
+    return Array(n, dtype)
 
 
 def argmax(x):
