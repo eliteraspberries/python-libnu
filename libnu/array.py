@@ -1,6 +1,7 @@
 import ctypes
 import functools
 import numpy
+import sys
 
 from . import libnu
 from . import NuComplex
@@ -20,12 +21,22 @@ def addressof(x):
     return ctypes.cast(x.ctypes.data, ctypes.POINTER(ctypeof(x)))
 
 
-pybuffer_from_memory = ctypes.pythonapi.PyBuffer_FromMemory
-pybuffer_from_memory.restype = ctypes.py_object
-pybuffer_from_memory.argtypes = [
-    ctypes.c_void_p,
-    ctypes.c_ssize_t,
-]
+if sys.version_info >= (3, 3):
+    _pymemoryview_from_memory = ctypes.pythonapi.PyMemoryView_FromMemory
+    _pymemoryview_from_memory.restype = ctypes.py_object
+    _pymemoryview_from_memory.argtypes = [
+        ctypes.c_void_p,
+        ctypes.c_ssize_t,
+        ctypes.c_int,
+    ]
+    _PyBUF_WRITE = 0x200
+else:
+    _pybuffer_from_memory = ctypes.pythonapi.PyBuffer_FromMemory
+    _pybuffer_from_memory.restype = ctypes.py_object
+    _pybuffer_from_memory.argtypes = [
+        ctypes.c_void_p,
+        ctypes.c_ssize_t,
+    ]
 
 '''
 void *nu_array_alloc(size_t, size_t);
@@ -210,7 +221,10 @@ class Array(numpy.ndarray):
     def __new__(cls, n, dtype):
         stride = numpy.dtype(dtype).itemsize
         ptr = nu_array_alloc(n, stride)
-        buffer = pybuffer_from_memory(ptr, n * stride)
+        if sys.version_info >= (3, 3):
+            buffer = _pymemoryview_from_memory(ptr, n * stride, _PyBUF_WRITE)
+        else:
+            buffer = _pybuffer_from_memory(ptr, n * stride)
         array = super(Array, cls).__new__(cls, n, dtype=dtype, buffer=buffer)
         array.ptr = ptr
         return array
