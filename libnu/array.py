@@ -285,7 +285,7 @@ def add(x, y, out=None):
 
 
 @_binary(nu_array_mul, numpy.float32)
-def multiply(x, y, out=None):
+def mul(x, y, out=None):
     pass
 
 
@@ -322,6 +322,14 @@ def log(x, out=None):
 @_unary(nu_array_sin, numpy.float32)
 def sin(x, out=None):
     pass
+
+
+def multiply(x, y, out=None):
+    assert x.dtype == y.dtype
+    if x.dtype == numpy.float32:
+        return mul(x, y, out)
+    if x.dtype == numpy.complex64:
+        return cmul(x, y, out)
 
 
 def linspace(a, b, n):
