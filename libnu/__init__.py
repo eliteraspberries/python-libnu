@@ -15,6 +15,7 @@ __status__ = 'Development'
 
 __all__ = [
     'array',
+    'clock',
     'random',
     'sum',
 ]
